@@ -26,6 +26,21 @@ var searchCity = function (city) {
       if (respone.ok) {
         respone.json().then(function (data) {
           console.log(data);
+
+          var iconURL = `https://openweathermap.org/img/w/${data}.png`;
+          var cityDetail = $(`
+          <h2 id="currentCity">
+              ${data.name} ${today} <img src="${iconURL}" alt="${data.weather[0].description}" />
+          </h2>
+          <p>Temperature: ${data.main.temp} °F</p>
+          <p>Humidity: ${data.main.humidity}\%</p>
+          <p>Wind Speed: ${data.wind.speed} MPH</p>
+      `);
+
+          // add current city to html for display
+          $("#cityDetail").append(cityDetail);
+
+          //fiveDayData(data.coord);
         });
       } else {
         alert("Error: " + respone.statusText);
@@ -35,3 +50,5 @@ var searchCity = function (city) {
       alert("Unable to connect to api.");
     });
 };
+
+searchCity("fullerton");
