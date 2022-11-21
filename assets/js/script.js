@@ -33,7 +33,7 @@ var searchCity = function (city) {
           <h2 id="currentCity">
               ${data.name} (${today}) <img src="${iconURL}" alt="${data.weather[0].description}" />
           </h2>
-          <p>Temperature: ${data.main.temp} °F</p>
+          <p>Temperature : ${data.main.temp} °F</p>
           <p>Humidity   : ${data.main.humidity}\%</p>
           <p>Wind Speed : ${data.wind.speed} MPH</p>
       `);
@@ -52,7 +52,7 @@ var searchCity = function (city) {
     });
 };
 
-searchCity("fullerton");
+//searchCity("fullerton");
 
 // five days data get from other api end point
 var fiveDayData = function (coord) {
@@ -62,7 +62,7 @@ var fiveDayData = function (coord) {
       if (respone.ok) {
         respone.json().then(function (data) {
           console.log(data);
-          console.log(displayFiveDay(data));
+          displayFiveDay(data);
         });
       } else {
         alert("Error: " + respone.statusText);
@@ -82,7 +82,7 @@ var displayFiveDay = function (data) {
       wind: data.list[i].wind.speed,
       humidity: data.list[i].main.humidity,
     };
-    console.log(forecastInfo.date);
+    //console.log(forecastInfo.date);
 
     var iconURL = `<img src="https://openweathermap.org/img/w/${forecastInfo.icon}.png" " />`;
 
@@ -95,9 +95,9 @@ var displayFiveDay = function (data) {
                               .format("MM/DD/YYYY")}
                             </h5>
                             <p>${iconURL}</p>
-                            <p>Temp: ${forecastInfo.temp} °F</p>
-                            <p>Wind: ${forecastInfo.wind} MPH</p>
-                            <p>Humidity: ${forecastInfo.humidity}\%</p>
+                            <p>Temp : ${forecastInfo.temp} °F</p>
+                            <p>Wind : ${forecastInfo.wind} MPH</p>
+                            <p>Humidity : ${forecastInfo.humidity}\%</p>
                         </div>
                     </div>
                
@@ -106,3 +106,28 @@ var displayFiveDay = function (data) {
     $("#fivedayforecast").append(forecastDetail);
   }
 };
+
+var searchHistoryList = [];
+
+// search button
+$("#searchbtn").on("click", function (e) {
+  e.preventDefault();
+
+  var cityValue = $("#city").val().trim();
+  if (cityValue === "") {
+    alert("Please input city name for search.");
+    cityEl.focus();
+    return;
+  }
+  searchCity(cityValue);
+  //latLon();
+  if (!searchHistoryList.includes(cityValue)) {
+    searchHistoryList.push(cityValue);
+    var citySearched = $(
+      `<button class="btn btn-secondary btn-sm history-list">${cityValue}</button>`
+    );
+    // citySearched.textContent = cityValue;
+    $("#searchHistory").append(citySearched);
+  }
+  localStorage.setItem("city", JSON.stringify(searchHistoryList));
+});
