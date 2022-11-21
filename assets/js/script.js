@@ -56,13 +56,13 @@ searchCity("fullerton");
 
 // five days data get from other api end point
 var fiveDayData = function (coord) {
-  var apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${coord.lat}&lon=${coord.lon}&units=imperial&cnt=6&exclude=current,minutely,hourly,alerts&appid=${apiKey}`;
+  var apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${coord.lat}&lon=${coord.lon}&units=imperial&cnt=40&appid=${apiKey}`;
   fetch(apiUrl)
     .then(function (respone) {
       if (respone.ok) {
         respone.json().then(function (data) {
           console.log(data);
-          // display(data);
+          console.log(displayFiveDay(data));
         });
       } else {
         alert("Error: " + respone.statusText);
@@ -74,7 +74,7 @@ var fiveDayData = function (coord) {
 };
 
 var displayFiveDay = function (data) {
-  for (var i = 1; i < 6; i++) {
+  for (var i = 7; i < 40; i += 8) {
     var forecastInfo = {
       date: data.list[i].dt,
       icon: data.list[i].weather[0].icon,
@@ -82,7 +82,27 @@ var displayFiveDay = function (data) {
       wind: data.list[i].wind.speed,
       humidity: data.list[i].main.humidity,
     };
+    console.log(forecastInfo.date);
+
+    var iconURL = `<img src="https://openweathermap.org/img/w/${forecastInfo.icon}.png" " />`;
+
+    var forecastDetail = $(`
+               
+                    <div class="col pl-3  pt-3 mb-3  bg-primary text-light" style="width: 12rem";>
+                        <div class="card-body">
+                            <h5>${dayjs
+                              .unix(forecastInfo.date)
+                              .format("MM/DD/YYYY")}
+                            </h5>
+                            <p>${iconURL}</p>
+                            <p>Temp: ${forecastInfo.temp} °F</p>
+                            <p>Wind: ${forecastInfo.wind} MPH</p>
+                            <p>Humidity: ${forecastInfo.humidity}\%</p>
+                        </div>
+                    </div>
+               
+            `);
+
+    $("#fivedayforecast").append(forecastDetail);
   }
-  var forcastDate = dayjs.unix(forecastInfo.date).format("MM/DD/YYYY");
-  var iconURL = `<img src="https://openweathermap.org/img/w/${cityInfo.icon}.png" alt="${futureResponse.daily[i].weather[0].main}" />`;
 };
