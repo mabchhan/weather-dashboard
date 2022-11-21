@@ -27,20 +27,21 @@ var searchCity = function (city) {
         respone.json().then(function (data) {
           console.log(data);
 
-          var iconURL = `https://openweathermap.org/img/w/${data}.png`;
+          var iconURL =
+            "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
           var cityDetail = $(`
           <h2 id="currentCity">
-              ${data.name} ${today} <img src="${iconURL}" alt="${data.weather[0].description}" />
+              ${data.name} (${today}) <img src="${iconURL}" alt="${data.weather[0].description}" />
           </h2>
           <p>Temperature: ${data.main.temp} °F</p>
-          <p>Humidity: ${data.main.humidity}\%</p>
-          <p>Wind Speed: ${data.wind.speed} MPH</p>
+          <p>Humidity   : ${data.main.humidity}\%</p>
+          <p>Wind Speed : ${data.wind.speed} MPH</p>
       `);
 
           // add current city to html for display
           $("#cityDetail").append(cityDetail);
 
-          //fiveDayData(data.coord);
+          fiveDayData(data.coord);
         });
       } else {
         alert("Error: " + respone.statusText);
@@ -52,3 +53,36 @@ var searchCity = function (city) {
 };
 
 searchCity("fullerton");
+
+// five days data get from other api end point
+var fiveDayData = function (coord) {
+  var apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${coord.lat}&lon=${coord.lon}&units=imperial&cnt=6&exclude=current,minutely,hourly,alerts&appid=${apiKey}`;
+  fetch(apiUrl)
+    .then(function (respone) {
+      if (respone.ok) {
+        respone.json().then(function (data) {
+          console.log(data);
+          // display(data);
+        });
+      } else {
+        alert("Error: " + respone.statusText);
+      }
+    })
+    .catch(function (error) {
+      alert("Unable to connect to api.");
+    });
+};
+
+var displayFiveDay = function (data) {
+  for (var i = 1; i < 6; i++) {
+    var forecastInfo = {
+      date: data.list[i].dt,
+      icon: data.list[i].weather[0].icon,
+      temp: data.list[i].main.temp,
+      wind: data.list[i].wind.speed,
+      humidity: data.list[i].main.humidity,
+    };
+  }
+  var forcastDate = dayjs.unix(forecastInfo.date).format("MM/DD/YYYY");
+  var iconURL = `<img src="https://openweathermap.org/img/w/${cityInfo.icon}.png" alt="${futureResponse.daily[i].weather[0].main}" />`;
+};
