@@ -62,6 +62,7 @@ var fiveDayData = function (coord) {
       if (respone.ok) {
         respone.json().then(function (data) {
           console.log(data);
+          $("#fivedayforecast").empty();
           displayFiveDay(data);
         });
       } else {
@@ -74,7 +75,6 @@ var fiveDayData = function (coord) {
 };
 
 var displayFiveDay = function (data) {
-  $("#fivedayforecast").empty();
   for (var i = 7; i < 40; i += 8) {
     var forecastInfo = {
       date: data.list[i].dt,
@@ -89,7 +89,7 @@ var displayFiveDay = function (data) {
 
     var forecastDetail = $(`
                
-                    <div class="col pl-3  pt-3 mb-3  bg-primary text-light" style="width: 12rem";>
+                    <div class="col  bg-primary text-light" style="width: 12rem";>
                         <div class="card-body">
                             <h5>${dayjs
                               .unix(forecastInfo.date)
@@ -138,3 +138,14 @@ $(document).on("click", ".history-list", function () {
   var historyList = $(this).text();
   searchCity(historyList);
 });
+
+//when we load
+var init = function () {
+  var getLocalData = JSON.parse(localStorage.getItem("city"));
+  if (getLocalData !== null) {
+    var index = getLocalData.length - 1;
+    searchCity(getLocalData[index]);
+  }
+};
+
+init();
