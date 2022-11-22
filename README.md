@@ -40,8 +40,8 @@ GIVEN a weather dashboard with form inputs
 
 - link to repo
 
-  -
+  - https://github.com/mabchhan/weather-dashboard
 
 - link to deployed
 
-  -
+  - https://mabchhan.github.io/weather-dashboard/
