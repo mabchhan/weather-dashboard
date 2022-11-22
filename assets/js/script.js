@@ -26,7 +26,7 @@ var searchCity = function (city) {
       if (respone.ok) {
         respone.json().then(function (data) {
           console.log(data);
-
+          $("#cityDetail").empty();
           var iconURL =
             "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
           var cityDetail = $(`
@@ -74,6 +74,7 @@ var fiveDayData = function (coord) {
 };
 
 var displayFiveDay = function (data) {
+  $("#fivedayforecast").empty();
   for (var i = 7; i < 40; i += 8) {
     var forecastInfo = {
       date: data.list[i].dt,
@@ -130,4 +131,10 @@ $("#searchbtn").on("click", function (e) {
     $("#searchHistory").append(citySearched);
   }
   localStorage.setItem("city", JSON.stringify(searchHistoryList));
+});
+
+// click on search history
+$(document).on("click", ".history-list", function () {
+  var historyList = $(this).text();
+  searchCity(historyList);
 });
